@@ -112,3 +112,16 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.board {
+    border-collapse: collapse;
+}
+.board td {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 50%;
+}
