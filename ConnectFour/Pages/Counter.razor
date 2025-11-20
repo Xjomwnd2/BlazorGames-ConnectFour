@@ -1,18 +1,61 @@
-﻿@page "/counter"
+﻿@page "/connectfour"
 
-<PageTitle>Counter</PageTitle>
+<h3>Connect Four</h3>
 
-<h1>Counter</h1>
+<table class="board">
+    @for (int row = 0; row < Rows; row++)
+    {
+        <tr>
+            @for (int col = 0; col < Columns; col++)
+            {
+                <td @onclick="() => DropPiece(col)" style="background-color:@GetCellColor(row, col)">
+                    &nbsp;
+                </td>
+            }
+        </tr>
+    }
+</table>
 
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<p>@statusMessage</p>
 
 @code {
-    private int currentCount = 0;
+    private const int Rows = 6;
+    private const int Columns = 7;
+    private string[,] board = new string[Rows, Columns];
+    private bool isPlayerOneTurn = true;
+    private string statusMessage = "Player 1's turn";
 
-    private void IncrementCount()
+    private void DropPiece(int column)
     {
-        currentCount++;
+        // Find the lowest empty row
+        for (int row = Rows - 1; row >= 0; row--)
+        {
+            if (string.IsNullOrEmpty(board[row, column]))
+            {
+                board[row, column] = isPlayerOneTurn ? "Red" : "Yellow";
+                if (CheckWinner(row, column))
+                {
+                    statusMessage = $"Player {(isPlayerOneTurn ? 1 : 2)} wins!";
+                }
+                else
+                {
+                    isPlayerOneTurn = !isPlayerOneTurn;
+                    statusMessage = $"Player {(isPlayerOneTurn ? 1 : 2)}'s turn";
+                }
+                break;
+            }
+        }
+    }
+
+    private string GetCellColor(int row, int col)
+    {
+        return board[row, col] ?? "White";
+    }
+
+    // You will implement winner-checking logic here
+    private bool CheckWinner(int row, int col)
+    {
+        // Placeholder: returns false for now
+        return false;
     }
 }
