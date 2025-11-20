@@ -1,0 +1,111 @@
+@page "/connectfour"
+
+<h3>Connect Four</h3>
+
+<table class="board">
+    @for (int row = 0; row < Rows; row++)
+    {
+        <tr>
+            @for (int col = 0; col < Columns; col++)
+            {
+                <td 
+                    @onclick="() => DropPiece(col)" 
+                    style="background-color:@GetCellColor(row, col)">
+                </td>
+            }
+        </tr>
+    }
+</table>
+
+<p>@statusMessage</p>
+
+<h4>Move History</h4>
+<ul>
+    @foreach (var move in moves)
+    {
+        <li>@move</li>
+    }
+</ul>
+
+<h4>Win Counts</h4>
+<p>Player 1: @player1Wins</p>
+<p>Player 2: @player2Wins</p>
+
+@code {
+    private const int Rows = 6;
+    private const int Columns = 7;
+
+    private string[,] board = new string[Rows, Columns];
+    private bool isPlayerOneTurn = true;
+    private string statusMessage = "Player 1's turn";
+
+    private List<string> moves = new List<string>();
+    private int player1Wins = 0;
+    private int player2Wins = 0;
+
+    private void DropPiece(int column)
+    {
+        for (int row = Rows - 1; row >= 0; row--)
+        {
+            if (string.IsNullOrEmpty(board[row, column]))
+            {
+                board[row, column] = isPlayerOneTurn ? "Red" : "Yellow";
+
+                moves.Add($"Player {(isPlayerOneTurn ? 1 : 2)} dropped at column {column + 1}");
+
+                if (CheckWinner(row, column))
+                {
+                    statusMessage = $"Player {(isPlayerOneTurn ? 1 : 2)} wins!";
+
+                    if (isPlayerOneTurn) player1Wins++;
+                    else player2Wins++;
+
+                    return;
+                }
+
+                isPlayerOneTurn = !isPlayerOneTurn;
+                statusMessage = $"Player {(isPlayerOneTurn ? 1 : 2)}'s turn";
+
+                break;
+            }
+        }
+    }
+
+    private string GetCellColor(int row, int col)
+    {
+        return board[row, col] ?? "White";
+    }
+
+    private bool CheckWinner(int row, int col)
+    {
+        string player = board[row, col];
+        return CheckDirection(row, col, 1, 0, player) || 
+               CheckDirection(row, col, 0, 1, player) ||
+               CheckDirection(row, col, 1, 1, player) ||
+               CheckDirection(row, col, 1, -1, player);
+    }
+
+    private bool CheckDirection(int row, int col, int dRow, int dCol, string player)
+    {
+        int count = 1;
+        count += CountPieces(row, col, dRow, dCol, player);
+        count += CountPieces(row, col, -dRow, -dCol, player);
+        return count >= 4;
+    }
+
+    private int CountPieces(int row, int col, int dRow, int dCol, string player)
+    {
+        int r = row + dRow;
+        int c = col + dCol;
+        int count = 0;
+
+        while (r >= 0 && r < Rows && c >= 0 && c < Columns && board[r, c] == player)
+        {
+            count++;
+            r += dRow;
+            c += dCol;
+        }
+
+        return count;
+    }
+}
