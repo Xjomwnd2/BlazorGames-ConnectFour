@@ -94,7 +94,7 @@ h1:focus {
     margin-bottom: 20px;
 }
 
-import { useState } from "react";
+import { useState }  "react";
 
 export default function App() {
   const rows = 6;
