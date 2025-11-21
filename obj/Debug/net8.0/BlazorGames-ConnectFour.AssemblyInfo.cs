@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BlazorGames-ConnectFour")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+904394b8e4aa7914d1da5a37f7a1f7e28344f875")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e18d1c3e0d0430933c14f6037533b28484f0e25c")]
 [assembly: System.Reflection.AssemblyProductAttribute("BlazorGames-ConnectFour")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BlazorGames-ConnectFour")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
