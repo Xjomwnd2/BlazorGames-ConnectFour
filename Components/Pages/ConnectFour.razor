@@ -1,0 +1,95 @@
+@page "/connectfour"
+
+<h1 class="title">Connect Four</h1>
+
+<div class="board">
+    @for (int r = 0; r < Rows; r++)
+    {
+        <div class="row">
+            @for (int c = 0; c < Cols; c++)
+            {
+                <div class="cell" @onclick="() => DropPiece(c)">
+                    <div class="piece @(Board[r][c])"></div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<p class="status">@Status</p>
+
+@code {
+    const int Rows = 6;
+    const int Cols = 7;
+
+    string[][] Board = new string[Rows][];
+    string CurrentPlayer = "red"; // red or yellow
+    string Status = "";
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < Rows; i++)
+        {
+            Board[i] = Enumerable.Repeat("", Cols).ToArray();
+        }
+    }
+
+    void DropPiece(int column)
+    {
+        // Find lowest empty spot
+        for (int r = Rows - 1; r >= 0; r--)
+        {
+            if (Board[r][column] == "")
+            {
+                Board[r][column] = CurrentPlayer;
+
+                if (CheckWin(r, column))
+                {
+                    Status = $"{CurrentPlayer.ToUpper()} WINS!";
+                }
+                else
+                {
+                    CurrentPlayer = CurrentPlayer == "red" ? "yellow" : "red";
+                }
+                return;
+            }
+        }
+    }
+
+    bool CheckWin(int row, int col)
+    {
+        return CheckDirection(row, col, 1, 0)   // horizontal
+            || CheckDirection(row, col, 0, 1)   // vertical
+            || CheckDirection(row, col, 1, 1)   // diag ↘
+            || CheckDirection(row, col, 1, -1); // diag ↙
+    }
+
+    bool CheckDirection(int row, int col, int dRow, int dCol)
+    {
+        string p = Board[row][col];
+        int count = 1;
+
+        // forward direction
+        int r = row + dRow;
+        int c = col + dCol;
+        while (IsValid(r, c) && Board[r][c] == p)
+        {
+            count++;
+            r += dRow; c += dCol;
+        }
+
+        // backward direction
+        r = row - dRow;
+        c = col - dCol;
+        while (IsValid(r, c) && Board[r][c] == p)
+        {
+            count++;
+            r -= dRow; c -= dCol;
+        }
+
+        return count >= 4;
+    }
+
+    bool IsValid(int r, int c)
+        => r >= 0 && r < Rows && c >= 0 && c < Cols;
+}
